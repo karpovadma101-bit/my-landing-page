@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280">
+    <title>Клубный дом 4 — А101 Всеволожск</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0c0d12; 
+            --bg-card: #12141c;
+            --primary: #43495A;
+            --primary-hover: #52596e;
+            --accent-warm: #d4af37;
+            --text-light: #ffffff;
+            --text-muted: #6e7485;
+            --border-radius: 32px;
+            --font-family: 'Montserrat', sans-serif;
+            --transition-bounce: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-light);
+            font-family: var(--font-family);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 140px 0;
+            position: relative;
+        }
+
+        h2 {
+            font-size: 42px;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 60px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- КИНЕТИЧЕСКИЕ СТРУНЫ-РАЗДЕЛИТЕЛИ --- */
+        .string-line {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .string-line::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -50%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, rgba(212,175,55,0) 0%, rgba(212,175,55,0.4) 50%, rgba(212,175,55,0) 100%);
+            animation: stringFlow 4s infinite linear;
+        }
+        @keyframes stringFlow {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        /* --- СКРОЛЛ-АНИМАЦИИ --- */
+        .tune-reveal {
+            opacity: 0;
+            transform: translateY(60px) scale(0.98);
+            transition: var(--transition-bounce);
+        }
+        .tune-reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .tune-parallax {
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Парящая навигация поверх полноэкранного рендера */
+        header {
+            padding: 40px 0;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+            top: 0;
+            left: 0;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #d1d5db;
+            font-weight: 300;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin-left: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -8px; left: 0; width: 0; height: 1px;
+            background: var(--accent-warm);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* БЛОК 1: Главный экран (Контейнер для анимации маски-арки) */
+        .hero-section {
+            padding-top: 0;
+            padding-bottom: 80px;
+            height: 140vh; /* Увеличиваем высоту зоны для фиксации скролла */
+            position: relative;
+        }
+
+        .hero-sticky-container {
+            position: sticky;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero-banner-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px; /* Начальная форма в виде благородной вертикальной арки */
+            height: 640px;
+            transform: translate(-50%, -50%);
+            border-radius: 250px 250px 0 0; /* Геометрия классической арки */
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            will-change: width, height, border-radius, transform;
+            transition: width 0.1s linear, height 0.1s linear, border-radius 0.1s linear, transform 0.1s linear;
+        }
+
+        .hero-image-pan {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translateX(-50%) scale(1.1); /* Центрирование текстуры внутри арки */
+            background: url('клубный дом.png') center/cover no-repeat;
+            will-change: transform;
+            transition: transform 0.1s linear;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(12,13,18,0.2) 0%, rgba(12,13,18,0.85) 100%);
+            z-index: 1;
+        }
+
+        .hero-content-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 120px;
+            pointer-events: none; /* Пропускаем клики сквозь летящий текст */
+        }
+
+        .hero-text {
+            max-width: 650px;
+            will-change: opacity, transform;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+
+        .hero-text .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 8px 24px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+            color: var(--accent-warm);
+        }
+
+        .hero-text h1 {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+        }
+
+        .hero-text p {
+            color: #e5e7eb;
+            font-size: 18px;
+            line-height: 1.6;
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background: var(--text-light);
+            color: var(--bg-main);
+            padding: 22px 46px;
+            border-radius: 100px;
+            font-weight: 600;
+            text-decoration: none;
+            pointer-events: auto; /* Возвращаем кликабельность кнопке */
+            transition: var(--transition-bounce);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(212,175,55,0.2);
+        }
+
+        /* Вынесли блок УТП из липкого контейнера, чтобы он шел далее по структуре */
+        .hero-usps-container {
+            margin-top: -60px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .hero-usps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .usp-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 36px;
+            border: 1px solid rgba(255,255,255,0.02);
+            transition: var(--transition-bounce);
+        }
+
+        .usp-card:hover {
+            border-color: rgba(255,255,255,0.06);
+            background: #161924;
+        }
+
+        .usp-card h3 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--accent-warm);
+            letter-spacing: -1px;
+        }
+
+        .usp-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* БЛОК 2: Визуальный генплан */
+        .masterplan-wrapper-full {
+            display: grid;
+            grid-template-columns: 500px 1fr; 
+            background: transparent; 
+            overflow: hidden;
+            height: 640px;
+            width: 100vw;
+        }
+
+        .masterplan-info {
+            padding: 80px 40px 80px 140px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .masterplan-info h3 {
+            font-size: 38px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .masterplan-info p {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .masterplan-image-container {
+            width: 70%;
+            height: 90%;
+            overflow: hidden;
+            position: relative;
+            align-self: center;
+            justify-self: end;
+            margin-right: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+
+        .masterplan-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .masterplan-wrapper-full:hover .masterplan-img {
+            transform: scale(1.03);
+        }
+
+        /* БЛОК 3: Мозаика УТП */
+        .mosaic-full-container {
+            width: 100vw;
+            padding: 0 40px;
+        }
+
+        .grid-mosaic {
+            display: grid;
+            grid-template-columns: 320px 1fr 320px;
+            gap: 24px;
+            width: 100%;
+        }
+
+        .mosaic-col {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .mosaic-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.02);
+            transition: var(--transition-bounce);
+        }
+
+        .mosaic-card:hover {
+            border-color: rgba(255,255,255,0.06);
+            background: #161924;
+        }
+
+        .mosaic-card.small { height: 220px; }
+        .mosaic-card.medium { height: 260px; }
+        
+        .mosaic-card.large {
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            justify-content: flex-end;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mosaic-card.large::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(12,13,18,0) 20%, rgba(12,13,18,0.9) 100%);
+            z-index: 1;
+        }
+
+        .mosaic-card.large .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .mosaic-card h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .mosaic-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .icon-svg {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mosaic-card:hover .icon-svg {
+            color: var(--text-light);
+        }
+
+        /* БЛОК 4: Двор-сад */
+        .yard-split {
+            display: grid;
+            grid-template-columns: 46% 54%;
+            gap: 60px;
+            background: transparent;
+            overflow: hidden;
+        }
+
+        .yard-content {
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .yard-content h3 {
+            font-size: 38px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .yard-content p {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .plant-tag {
+            background: var(--bg-card); 
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--text-light);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: var(--transition-bounce);
+        }
+
+        .plant-tag:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .yard-image {
+            background: url('https://images.unsplash.com/photo-1547949003-9792a18a2601?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+            min-height: 520px;
+            border-radius: var(--border-radius); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .yard-split:hover .yard-image {
+            transform: scale(1.05);
+        }
+
+        /* БЛОК 5: Тех-Табы */
+        .tech-tabs-full {
+            background: transparent; 
+            padding: 80px 60px;
+            width: 100vw;
+        }
+
+        .tabs-header {
+            display: flex;
+            background: var(--bg-card);
+            padding: 8px;
+            border-radius: 100px;
+            width: fit-content;
+            margin: 0 auto 60px auto;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 16px 40px;
+            font-family: var(--font-family);
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: var(--text-light);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .tab-body-wrapper {
+            position: relative;
+            min-height: 440px;
+        }
+
+        .tab-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(15px);
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .tab-body.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .tab-text h3 {
+            font-size: 36px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+
+        .tab-text p {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .feature-item {
+            background: var(--bg-card); 
+            padding: 28px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: var(--transition-bounce);
+        }
+
+        .feature-item h5 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .feature-item p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .tab-image {
+            height: 440px;
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* БЛОК 6: Инфраструктура */
+        .overlap-section-full {
+            position: relative;
+            height: 600px;
+            width: 100vw;
+        }
+
+        .overlap-bg-image {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 58%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .overlap-section-full:hover .overlap-bg-image {
+            transform: scale(1.02);
+        }
+
+        .overlap-card-full {
+            position: absolute;
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            background: var(--primary); 
+            padding: 60px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            z-index: 2;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .overlap-card-full h3 {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .overlap-card-full p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 36px;
+            color: #f3f4f6;
+            font-weight: 300;
+        }
+
+        .overlap-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .badge-item {
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #ffffff;
+        }
+
+        .badge-item::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--accent-warm);
+            border-radius: 50%;
+        }
+
+        /* БЛОК 7: Каталог Планировок */
+        .catalog-filter {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 60px;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            padding: 14px 32px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: var(--font-family);
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition-bounce);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--text-light);
+            color: var(--bg-main);
+            border-color: var(--text-light);
+            box-shadow: 0 15px 30px rgba(255,255,255,0.1);
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .flat-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.02);
+            transition: var(--transition-bounce);
+        }
+
+        .flat-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(255,255,255,0.08);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+
+        .flat-plan {
+            height: 220px;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 24px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .flat-plan svg {
+            width: 120px;
+            height: 120px;
+        }
+
+        .flat-info h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .flat-info .flat-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .flat-price {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--accent-warm);
+            margin-bottom: 28px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-reserve {
+            display: block;
+            background: var(--primary);
+            color: var(--text-light);
+            text-align: center;
+            padding: 16px 0;
+            border-radius: 100px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition-bounce);
+        }
+
+        .btn-reserve:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 10px 20px rgba(212,175,55,0.1);
+        }
+
+        /* БЛОК 8: Карта и Форма */
+        .contacts-wrapper {
+            display: flex;
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            height: 560px;
+            border: 1px solid rgba(255,255,255,0.02);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+        }
+
+        .form-side {
+            width: 42%;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-side h3 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .form-side p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 36px;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--bg-main);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px 22px;
+            color: var(--text-light);
+            font-family: var(--font-family);
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--text-muted);
+        }
+
+        .form-control::placeholder {
+            color: #4b5263;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--primary);
+            color: var(--text-light);
+            border: none;
+            padding: 20px 0;
+            border-radius: 16px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(212,175,55,0.15);
+        }
+
+        .office-address {
+            margin-top: 36px;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .office-address strong {
+            color: var(--text-light);
+        }
+
+        .map-side {
+            width: 58%;
+            background: #111218;
+            position: relative;
+        }
+
+        /* Подвал */
+        footer {
+            padding: 60px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Навигация -->
+    <header>
+        <div class="container header-inner">
+            <div class="logo">А101 <span>Клубный дом 4</span></div>
+            <nav>
+                <a href="#about">О проекте</a>
+                <a href="#yard">Двор-сад</a>
+                <a href="#tech">Технологии</a>
+                <a href="#catalog">Квартиры</a>
+                <a href="#contacts">Контакты</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- БЛОК 1: Главный экран (Интерактивная Скролл-Арка) -->
+    <section class="hero-section">
+        <div class="hero-sticky-container">
+            <div class="hero-banner-wrapper" id="heroWrapper">
+                <div class="hero-image-pan" id="heroImage"></div>
+                <div class="hero-overlay"></div>
+            </div>
+            
+            <div class="container" style="height: 100%; position: relative;">
+                <div class="hero-content-inner">
+                    <div class="hero-text" id="heroText">
+                        <span class="badge">Премьера во Всеволожске</span>
+                        <h1>Клубный дом 4</h1>
+                        <p>Камерный формат, благородная эстетика и приватность внутри развитого района. Пространство для тех, кто предъявляет повышенные требования к качеству жизни.</p>
+                        <a href="#catalog" class="hero-btn">Забронировать квартиру</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Линейка УТП (Вынесена, чтобы корректно идти следом за раскрывшимся экраном) -->
+    <div class="container hero-usps-container">
+        <div class="hero-usps tune-reveal">
+            <div class="usp-card">
+                <h3>до 12</h3>
+                <p>Комфортная этажность дома для размеренного ритма жизни</p>
+            </div>
+            <div class="usp-card">
+                <h3>241</h3>
+                <p>Коллекционная квартира во всем проекте</p>
+            </div>
+            <div class="usp-card">
+                <h3>2,84 м</h3>
+                <p>Высота потолков для ощущения максимального объема</p>
+            </div>
+            <div class="usp-card">
+                <h3>7,8 м²</h3>
+                <p>Приватной площади сада на каждую квартиру</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="string-line"></div>
+
+    <!-- БЛОК 2: Визуальный генплан -->
+    <section style="padding-left: 0; padding-right: 0;">
+        <div class="masterplan-wrapper-full tune-reveal">
+            <div class="masterplan-info">
+                <h3>Генплан проекта</h3>
+                <p>Изучите архитектурное расположение корпусов и Клубного дома 4 на объемной карте района «А101 Всеволожск». Оцените близость ключевых объектов инфраструктуры, прогулочных аллей и парковых зон.</p>
+            </div>
+            <div class="masterplan-image-container">
+                <img src="генплан.png" alt="Генплан территории" class="masterplan-img">
+            </div>
+        </div>
+    </section>
+
+    <div class="string-line"></div>
+
+    <!-- БЛОК 3: Мозаика УТП -->
+    <section id="about" style="padding-left: 0; padding-right: 0;">
+        <div class="mosaic-full-container">
+            <h2 class="tune-reveal">Продуманный до деталей</h2>
+            <div class="grid-mosaic">
+                <div class="mosaic-col tune-parallax" style="transform: translateY(0px);">
+                    <div class="mosaic-card small tune-reveal">
+                        <div>
+                            <div class="icon-svg">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="22" height="13" rx="2"/><path d="M4 16v4M20 16v4M2 9h20M7 13h.01M17 13h.01"/></svg>
+                            </div>
+                            <h4>Двор без машин</h4>
+                        </div>
+                        <p>Безопасное пространство и идеальная тишина во внутреннем контуре.</p>
+                    </div>
+                    <div class="mosaic-card small tune-reveal">
+                        <div>
+                            <div class="icon-svg">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 22h20L12 2zM12 5l7.5 15H4.5L12 5zm0 8v4"/></svg>
+                            </div>
+                            <h4>Камерный сад</h4>
+                        </div>
+                        <p>Приватная территория с рельефной геопластикой и ландшафтным дизайном.</p>
+                    </div>
+                </div>
+
+                <div class="mosaic-col tune-parallax" style="transform: translateY(30px);">
+                    <div class="mosaic-card large tune-reveal" style="background-image: url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=600&q=80')">
+                        <div class="card-content">
+                            <h4>Высота потолков 2,84 м</h4>
+                            <p>Увеличенное остекление, больше объема и естественного света.</p>
+                        </div>
+                    </div>
+                    <div class="mosaic-card large tune-reveal" style="background-image: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80')">
+                        <div class="card-content">
+                            <h4>Доступ к паркингу из лифта</h4>
+                            <p>Спускайтесь к своему автомобилю прямо из квартиры, не выходя на улицу.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mosaic-col tune-parallax" style="transform: translateY(0px);">
+                    <div class="mosaic-card medium tune-reveal">
+                        <div>
+                            <div class="icon-svg">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            </div>
+                            <h4>Зарядка электромобилей</h4>
+                        </div>
+                        <p>Предусмотрена техническая возможность установки зарядных станций на паркинге.</p>
+                    </div>
+                    <div class="mosaic-card medium tune-reveal">
+                        <div>
+                            <div class="icon-svg">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+                            </div>
+                            <h4>Гастрокластер</h4>
+                        </div>
+                        <p>Кафе, пекарни и полезные сервисы с доступом исключительно с улицы.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="string-line"></div>
+
+    <!-- БЛОК 4: Двор-сад -->
+    <section id="yard">
+        <div class="container">
+            <div class="yard-split tune-reveal">
+                <div class="yard-content">
+                    <h3>Личный парк за закрытыми дверями</h3>
+                    <p>Рельефный ландшафт с перепадами высот во дворе образует уютные парковые зоны. Закрытый охраняемый контур гарантирует безопасность для прогулок детей без случайных прохожих и транзитных маршрутов.</p>
+                    <div class="tags-container">
+                        <span class="plant-tag">барбарис</span>
+                        <span class="plant-tag">рябинник</span>
+                        <span class="plant-tag">ажурная спирея</span>
+                        <span class="plant-tag">ели</span>
+                        <span class="plant-tag">горные сосны</span>
+                        <span class="plant-tag">цветущие яблони</span>
+                    </div>
+                </div>
+                <div class="yard-image"></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="string-line"></div>
+
+    <!-- БЛОК 5: Технологии и паркинг -->
+    <section id="tech" style="padding-left: 0; padding-right: 0;">
+        <div class="tech-tabs-full tune-reveal">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab(event, 'parking-tab')">Подземный паркинг</button>
+                <button class="tab-btn" onclick="switchTab(event, 'storage-tab')">Индивидуальные кладовые</button>
+            </div>
+            
+            <div class="tab-body-wrapper" style="padding: 0 40px;">
+                <div id="parking-tab" class="tab-body active">
+                    <div class="tab-text">
+                        <h3>Комфорт нового уровня</h3>
+                        <p>Вы выходите из квартиры, спускаетесь на лифте в теплый подземный уровень и садитесь в машину. Зимой — без верхней одежды, с покупками — сразу до дверей квартиры.</p>
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <h5>108 машиномест</h5>
+                                <p>Лимитированная емкость подземного паркинга</p>
+                            </div>
+                            <div class="feature-item">
+                                <h5>Прямой лифт</h5>
+                                <p>Доступ из любого подъезда напрямую на подземный уровень</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-image" style="background-image: url('https://images.unsplash.com/photo-1517524206127-48bbd363f3d7?auto=format&fit=crop&w=1000&q=80');"></div>
+                </div>
+
+                <div id="storage-tab" class="tab-body">
+                    <div class="tab-text">
+                        <h3>Свобода от сезонных вещей</h3>
+                        <p>Индивидуальные кладовые (келлеры) освободят пространство вашей квартиры. Храните сноуборды, комплекты шин, велосипеды и громоздкие вещи в сухом, отапливаемом и безопасном месте.</p>
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <h5>Безопасное хранение</h5>
+                                <p>Доступ на этаж имеют только собственники кладовых лотов</p>
+                            </div>
+                            <div class="feature-item">
+                                <h5>Сухой микроклимат</h5>
+                                <p>Постоянная вентиляция и оптимальный уровень влажности</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-image" style="background-image: url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80');"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="string-line"></div>
+
+    <!-- БЛОК 6: Инфраструктура -->
+    <section style="padding-left: 0; padding-right: 0;">
+        <div class="overlap-section-full tune-reveal">
+            <div class="overlap-bg-image"></div>
+            <div class="overlap-card-full">
+                <h3>Все необходимое на первом этаже</h3>
+                <p>Быстрый доступ к свежей выпечке, ароматному кофе и ресторанам. Мы полностью сохранили уединение жильцов: все заведения имеют входы строго с внешней стороны улицы.</p>
+                <div class="overlap-badges">
+                    <div class="badge-item">Кофейни и пекарни с утренней выпечкой</div>
+                    <div class="badge-item">Локальные гастробары и лавки деликатесов</div>
+                    <div class="badge-item">Aптека, химчистка и бытовые сервисы у дома</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="string-line"></div>
+
+    <!-- БЛОК 7: Каталог -->
+    <section id="catalog">
+        <div class="container">
+            <h2>Коллекция планировочных решений</h2>
+            <div class="catalog-filter tune-reveal">
+                <button class="filter-btn active">Все</button>
+                <button class="filter-btn">Студии</button>
+                <button class="filter-btn">1-комнатные</button>
+                <button class="filter-btn">2-комнатные</button>
+                <button class="filter-btn">3-комнатные</button>
+            </div>
+            
+            <div class="catalog-grid">
+                <div class="flat-card tune-reveal">
+                    <div class="flat-plan">
+                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="10" width="80" height="80" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+                            <rect x="10" y="10" width="40" height="40" stroke="white" stroke-width="1.5" stroke-opacity="0.15"/>
+                            <path d="M50 10V90" stroke="white" stroke-width="1" stroke-dasharray="4 4" stroke-opacity="0.2"/>
+                            <path d="M10 50H90" stroke="white" stroke-width="1" stroke-dasharray="4 4" stroke-opacity="0.2"/>
+                        </svg>
+                    </div>
+                    <div class="flat-info">
+                        <h4>Умная Студия, 25 м²</h4>
+                        <div class="flat-meta">Секция 1 • Этаж 4 • Потолки 2.84 м</div>
+                        <div class="flat-price">Коллекционный лот</div>
+                    </div>
+                    <a href="#contacts" class="btn-reserve">Забронировать</a>
+                </div>
+
+                <div class="flat-card tune-reveal">
+                    <div class="flat-plan">
+                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="10" width="80" height="80" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+                            <rect x="10" y="10" width="50" height="80" stroke="white" stroke-width="1.5" stroke-opacity="0.15"/>
+                            <path d="M60 10V90" stroke="white" stroke-width="1" stroke-dasharray="4 4" stroke-opacity="0.2"/>
+                        </svg>
+                    </div>
+                    <div class="flat-info">
+                        <h4>Клубная 1-комн., 38 м²</h4>
+                        <div class="flat-meta">Секция 2 • Этаж 6 • Кухня-гостиная</div>
+                        <div class="flat-price">Лимитированное предложение</div>
+                    </div>
+                    <a href="#contacts" class="btn-reserve">Забронировать</a>
+                </div>
+
+                <div class="flat-card tune-reveal">
+                    <div class="flat-plan">
+                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="10" width="80" height="80" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+                            <rect x="10" y="10" width="40" height="40" stroke="white" stroke-width="1.5" stroke-opacity="0.15"/>
+                            <rect x="50" y="50" width="40" height="40" stroke="white" stroke-width="1.5" stroke-opacity="0.15"/>
+                        </svg>
+                    </div>
+                    <div class="flat-info">
+                        <h4>Оптимальная 2-комн., 56 м²</h4>
+                        <div class="flat-meta">Секция 1 • Этаж 8 • Двусторонняя</div>
+                        <div class="flat-price">Осталось 3 квартиры</div>
+                    </div>
+                    <a href="#contacts" class="btn-reserve">Забронировать</a>
+                </div>
+
+                <div class="flat-card tune-reveal">
+                    <div class="flat-plan">
+                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="10" width="80" height="80" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+                            <circle cx="50" cy="50" r="30" stroke="white" stroke-width="1.5" stroke-opacity="0.15"/>
+                        </svg>
+                    </div>
+                    <div class="flat-info">
+                        <h4>Семейная 3-комн., 78 м²</h4>
+                        <div class="flat-meta">Секция 2 • Этаж 10 • Панорамное остекление</div>
+                        <div class="flat-price">Коллекционный лот</div>
+                    </div>
+                    <a href="#contacts" class="btn-reserve">Забронировать</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="string-line"></div>
+
+    <!-- БЛОК 8: Контакты -->
+    <section id="contacts">
+        <div class="container">
+            <div class="contacts-wrapper tune-reveal">
+                <div class="form-side">
+                    <h3>Запишитесь на показ</h3>
+                    <p>Наш эксперт организует визит на площадку, продемонстрирует архитектурный баланс Клубного дома 4 и рассчитает условия покупки.</p>
+                    <form onsubmit="event.preventDefault(); alert('Заявка успешно отправлена!');">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Ваше имя" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" class="form-control" placeholder="+7 (999) 000-00-00" required>
+                        </div>
+                        <button type="submit" class="submit-btn">Записаться на показ</button>
+                    </form>
+                    <div class="office-address">
+                        <strong>Офис продаж А101:</strong><br>
+                        Всеволожск, Скандинавский бульвар, дом 6<br>
+                        Ежедневно с 9:00 до 21:00
+                    </div>
+                </div>
+                
+                <div class="map-side">
+                    <iframe src="https://yandex.ru/map-widget/v1/?ll=30.612000%2C60.015000&z=14&l=map&theme=dark" width="100%" height="100%" frameborder="0" style="border:0; filter: invert(90%) hue-rotate(180deg) grayscale(50%);"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container footer-inner">
+            <div>© 2026 ГК А101. Проектная декларация на сайте наш.дом.рф</div>
+            <div>Лимитированное предложение. Материалы носят информационный характер и не являются офертой.</div>
+        </div>
+    </footer>
+
+    <!-- ДВИЖОК АНИМАЦИИ И ТАБОВ -->
+    <script>
+        function switchTab(event, tabId) {
+            const buttons = event.target.parentElement.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            const tabs = document.querySelectorAll('.tab-body');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px -10% -10% 0px',
+            threshold: 0.1
+        };
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.tune-reveal').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        const heroWrapper = document.getElementById('heroWrapper');
+        const heroImage = document.getElementById('heroImage');
+        const heroText = document.getElementById('heroText');
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            
+            // Расчет плавного раскрытия арки в полноэкранный формат (от 0 до 500px скролла)
+            if (scrolled <= 500) {
+                const progress = scrolled / 500; // значение от 0 до 1
+                
+                // Раскрываем арку по ширине и высоте до 100vw/100vh
+                heroWrapper.style.width = `calc(500px + (100vw - 500px) * ${progress})`;
+                heroWrapper.style.height = `calc(640px + (100vh - 640px) * ${progress})`;
+                
+                // Мягко убираем скругление арки до прямоугольника
+                heroWrapper.style.borderRadius = `calc(250px * ${1 - progress}) calc(250px * ${1 - progress}) 0 0`;
+                
+                // Эффект контр-масштабирования картинки для стабильности панорамы
+                heroImage.style.transform = `translateX(-50%) scale(${1.1 - (progress * 0.1)})`;
+                
+                // Растворяем текст первого экрана по мере раскрытия архитектуры
+                heroText.style.opacity = 1 - (progress * 1.5);
+                heroText.style.transform = `translateY(-${scrolled * 0.2}px)`;
+            } else {
+                // Фиксируем полноэкранное состояние
+                heroWrapper.style.width = '100vw';
+                heroWrapper.style.height = '100vh';
+                heroWrapper.style.borderRadius = '0';
+                heroImage.style.transform = 'translateX(-50%) scale(1)';
+                heroText.style.opacity = 0;
+            }
+            
+            // Кинетический параллакс для колонок мозаики УТП
+            const parallaxCols = document.querySelectorAll('.tune-parallax');
+            if(parallaxCols.length > 0) {
+                parallaxCols[0].style.transform = `translateY(${scrolled * 0.05}px)`;
+                parallaxCols[1].style.transform = `translateY(${(scrolled * 0.03) + 30}px)`;
+                parallaxCols[2].style.transform = `translateY(${scrolled * 0.07}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
